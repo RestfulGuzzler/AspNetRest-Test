@@ -1,51 +1,50 @@
-# Create a simple REST API using ASP.NET
+# REST API using ASP.NET and EntityFramework
 
-### The Brief:
+### Time Spent
 
-##### Time 0.5 - 2 hours
+- 1 day, which included an EF refresher course.
 
-Create a working RESTful API using ASP.NET, the API you will create will allow the consumer of the API to save, update and get transactions. Auth is considered out of scope for this test.
+### TransactionsController:
 
-A transaction is represented as follows:
-```cs
-        public long TransactionId { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public string Description { get; set; }
-        public decimal TransactionAmount { get; set; }
-        public DateTime CreatedDate { get; set; }        
-        public DateTime ModifiedDate { get; set; }
-        public string CurrencyCode { get; set; }
-        public string Merchant { get; set; }
-```
->  **Merchant and Description are optional**
+Repository Pattern used with constructor injection for testing purposes.
+The default constructor would ordinarily not exist in this controller and the ITransactionsRepository would
+be resolved and injected into the other constructor by an IoC such as Simple Inject, Windsor etc.
+For Demonstration purposes I have closely coupled the respository here for playing the solution.
 
-What you can use is pretty open (use whatever frameworks you are comfortable with) but it has to use ASP.NET and meet the following criteria (order of importance).
+#### Repositories
 
-1. **Your solution must compile and run first time** using Visual Studio 2013/2015, we shouldn't have to add any additional config etc (feel to add any instructions in the readme).
+- TransactionsRepositoryEF uses Entity Framework and will be the default. Seeded with two existing transactions.
+- TransactionsRepositoryBasic uses a simple List<Transaction> as storage (not persisted).
 
-2. The solution should be as simple as possible. More weight is given to the solution with the **least complexity**. 
+#### Test Project
 
-3. Transactions must be stored - you can use anything you like to achieve this, but consider the importance 1 & 2 in your solution. 
+- Added Tests of the Controller and Repositories. 
 
-4. The API must have an endpoint to create a new transaction.
+#### Endpoints for /api/transactions
 
-5. The API must have an endpoint to update a transaction.
+- GET    - endpoint to get a transaction(s)	
+- POST   - endpoint to create a new transaction.
+- PUT    - endpoint to update a transaction
+- DELETE - endpoint to delete a transaction
 
-6.  The API must have an endpoint to delete a transaction.
+#### Fiddler example for POST
 
-7. The API must have an endpoint to get a transaction.
+{
+	"TransactionDate" : "11/10/2016 4:00 PM",
+	"Description" : "Fiddler Transaction",
+	"TransactionAmount" : "10.99",
+	"CurrencyCode" : "GBP",
+	"Merchant" : "Merchant Fiddler2"
+}
 
-8. The API must have an endpoint to get a list of all transactions.
+#### Refactoring
 
-9. Your solution should contain tests, again how you do this is left up to you - unit, integration, acceptance etc. You can add more than one test project to demonstrate different test techniques for example integration / unit.
+- Would leverage an IoC such as Simple Inject to loosely couple and inject the ITransactionsRepository into the TransactionsController.
 
-##### How to Submit your test to us:
- - Fork this repository
-	- Create your solution in your repository
-	- When you're happy, [create a pull request](https://help.github.com/articles/creating-a-pull-request/)
- - Provide a readme which details:
-     - a short description of your API what have used, debugging instructions (*don't forget point 1*) any comments you wish to add
-     - The time you spent on the project.
-     - If you ran out of time, but would have liked to implemented certain features, tell us why
+- Would add exception Handling.
 
-GOOD LUCK :smile:
+- Would add lots more tests for all scenarios.
+
+- Would add more validation of Transaction for POST/Create and PUT/Update
+
+- Would add some client pages to consume each endpoint action.
